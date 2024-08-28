@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node index.js",
-    "dev": "nodemon --exec npm start"
+    "dev": "nodemon --exec npm start",
+    "initdb": "babel-node ./initialise-dev/initDevDB.js"
   },
+
   "author": "TheMarkRyan",
   "license": "ISC",
   "devDependencies": {
