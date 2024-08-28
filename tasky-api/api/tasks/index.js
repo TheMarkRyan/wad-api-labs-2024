@@ -46,5 +46,27 @@ router.delete('/:id', asyncHandler(async (req, res) => {
         res.status(404).json({ code: 404, msg: 'Unable to find Task' });
     }
 }));
+// register(Create)/Authenticate User
+router.post('/', async (req, res, next) => {
+    try {
+        if (req.query.action === 'register') {
+            await User(req.body).save();
+            res.status(201).json({
+                code: 201,
+                msg: 'Successfully created new user.',
+            });
+        } else {
+            const user = await User.findOne(req.body);
+            if (!user) {
+                return res.status(401).json({ code: 401, msg: 'Authentication failed' });
+            } else {
+                return res.status(200).json({ code: 200, msg: "Authentication Successful", token: 'TEMPORARY_TOKEN' });
+            }
+        }
+    } catch (error) {
+        next(error);  // Passes the error to the error-handling middleware
+    }
+});
+
 
 export default router;

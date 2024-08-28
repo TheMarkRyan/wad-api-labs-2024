@@ -12,8 +12,23 @@ const app = express();
 const port = process.env.PORT || 8080; // Use port from environment or default to 8080
 
 // Middleware
+
 app.use(cors());
 app.use(express.json());
+app.use((err, req, res, next) => {
+  if (err.name === 'ValidationError') {
+      return res.status(400).json({
+          success: false,
+          message: err.message,
+          errors: err.errors
+      });
+  }
+  if (process.env.NODE_ENV === 'production') {
+      return res.status(500).json({ success: false, message: 'Something went wrong!' });
+  } else {
+      return res.status(500).json({ success: false, message: err.stack });
+  }
+});
 
 // Routes
 app.use('/api/tasks', tasksRouter);
